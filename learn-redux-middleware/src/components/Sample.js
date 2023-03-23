@@ -19,11 +19,11 @@ const Sample = ({ loadingPost, loadingUsers, post, users }) => {
         {loadingUsers && "로딩 중..."}
         {!loadingUsers && users && (
           <ul>
-            {users.map((user) => {
+            {users.map((user) => (
               <li key={user.id}>
                 {user.name} ({user.email})
-              </li>;
-            })}
+              </li>
+            ))}
           </ul>
         )}
       </section>
