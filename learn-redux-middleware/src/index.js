@@ -3,13 +3,20 @@ import ReactDOM from "react-dom/client";
 import ReduxThunk from "redux-thunk";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import rootReducer from "./modules";
+import rootReducer, { rootSaga } from "./modules";
 import { applyMiddleware, createStore } from "redux";
 import { Provider } from "react-redux";
+import createSagaMiddleware from "redux-saga";
 // import loggerMiddleware from "./lib/loggerMiddleware";
 import logger from "redux-logger";
+import { composeWithDevTools } from "redux-devtools-extension";
+const sagaMiddleware = createSagaMiddleware();
+const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(logger, ReduxThunk, sagaMiddleware))
+);
 
-const store = createStore(rootReducer, applyMiddleware(logger, ReduxThunk));
+sagaMiddleware.run(rootSaga);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
