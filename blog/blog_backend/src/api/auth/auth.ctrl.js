@@ -55,18 +55,20 @@ export const login = async (ctx) => {
 
     try {
         const user = await User.findByUsername(username);
+        //user 없음
         if (!user) {
             ctx.status = 401;
             return;
         }
-
+        //password 불일치
         const vaild = await user.checkPassword(password);
         if (!vaild) {
             ctx.status = 401;
             return;
         }
+        //password 해싱
         ctx.body = user.serialize();
-
+        //토큰 생성
         const token = user.generateToken();
 
         //token 쿠키에 저장

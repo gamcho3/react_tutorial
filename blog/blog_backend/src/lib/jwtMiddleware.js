@@ -1,11 +1,13 @@
 import jwt from "jsonwebtoken";
 import User from "../models/user";
 const jwtMiddleware = async (ctx, next) => {
+    //저장된 쿠키에서 토큰 가져오기
     const token = ctx.cookies.get("access_token");
     //토큰 없을경우 다음으로
     if (!token) return next();
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        //state에 user라는 배열 생성 후 넣기
         ctx.state.user = {
             _id: decoded._id,
             username: decoded.username,

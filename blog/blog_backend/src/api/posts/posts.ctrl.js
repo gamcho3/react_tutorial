@@ -4,12 +4,32 @@ import Joi from "joi";
 
 const { ObjectId } = mongoose.Types;
 
-export const checkObjectid = (ctx, next) => {
+//작성자가 자신의 포스트를 찾는지 확인
+export const checkOwnPost = (ctx, next) => {
+    const { user, post } = ctx.state;
+    if (post.user._id.toString() !== user._id) {
+        ctx.status = 403;
+        return;
+    }
+    return next();
+};
+
+export const getPostById = async (ctx, next) => {
     const { id } = ctx.params;
     if (!ObjectId.isValid(id)) {
         ctx.status = 400;
         return;
     }
+    try {
+        //post검색
+        const post = await Post.findById(id);
+        if (!post) {
+            ctx.status = 404;
+            return;
+        }
+        ctx.state.post = post;
+        return next();
+    } catch (error) {}
     return next();
 };
 
@@ -72,14 +92,8 @@ export const list = async (ctx) => {
 };
 
 export const read = async (ctx) => {
-    const { id } = ctx.params;
     try {
-        const post = await Post.findById(id).exec();
-        if (!post) {
-            ctx.status = 404;
-            return;
-        }
-        ctx.body = post;
+        ctx.body = ctx.state.post;
     } catch (error) {
         ctx.throw(500, error);
     }

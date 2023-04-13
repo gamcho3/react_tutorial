@@ -10,10 +10,11 @@ posts.get("/", postsCtrl.list);
 posts.post("/", checkLoggedIn, postsCtrl.write);
 
 post.get("/", postsCtrl.read);
-post.delete("/", checkLoggedIn, postsCtrl.remove);
-post.patch("/", checkLoggedIn, postsCtrl.update);
+//삭제하거나 수정할떄 내 포스트인지 검사하는 미들웨어 적용
+post.delete("/", checkLoggedIn, postsCtrl.checkOwnPost, postsCtrl.remove);
+post.patch("/", checkLoggedIn, postsCtrl.checkOwnPost, postsCtrl.update);
 
-posts.use("/:id", postsCtrl.checkObjectid, post.routes());
+posts.use("/:id", postsCtrl.getPostById, post.routes());
 
 // posts.get("/:id", postsCtrl.read);
 // posts.delete("/:id", postsCtrl.remove);
