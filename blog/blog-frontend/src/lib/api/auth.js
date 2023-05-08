@@ -1,6 +1,4 @@
-import axios from "../../../../node_modules/axios/index";
-
-const client = axios.create();
+import client from "./client";
 
 export const login = ({ username, password }) => {
   client.post("/api/auth/login", { username, password });
@@ -13,5 +11,3 @@ export const register = ({ username, password }) => {
 export const check = () => {
   client.get("/api/auth/check");
 };
-
-export default client;
